@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>title</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="app-title">Weather Forecast</h1>
+      <div class="search-box">
+          <input type="text" id="text" placeholder="Enter City">
+          <button id="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </button>
+      </div>
+      <div class="weather-card">
+          <div class="main-info">
+              <h2 id="city">City Name</h2>
+              <div class="temp-container">
+                  <span id="temp_return" class="temperature">__°C</span>
+                  <span id="condition" class="condition">______</span>
+                  <span id="icon" class="condition"></span>
+              </div>
+          </div>
+          <div class="weather-details">
+              <div class="detail-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9a4 4 0 0 0-2 7.5"></path><path d="M12 3v2"></path><path d="M6.6 18.4l-1.4 1.4"></path><path d="M20 4v.5"></path><path d="M4 20v.5"></path><path d="M20 10v.5"></path><path d="M4 10v.5"></path><path d="M14 20v.5"></path><path d="M14 4v.5"></path><path d="M10 20v.5"></path><path d="M10 4v.5"></path><path d="M17.5 6.5l.5.5"></path><path d="M6 17.5l.5.5"></path></svg>
+                  <span>Feels like: <span id="feels_like" class="weather-value">__°C</span></span>
+              </div>
+              <div class="detail-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"></path><path d="M12 18v4"></path><path d="M4.93 4.93l4.24 4.24"></path><path d="M14.83 14.83l4.24 4.24"></path><path d="M19.07 4.93l-4.24 4.24"></path><path d="M14.83 9.17l-4.24-4.24"></path><path d="M2 12h6"></path><path d="M18 12h4"></path></svg>
+                  <span>Humidity: <span id="humidity" class="weather-value">__%</span></span>
+              </div>
+              <div class="detail-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"></path><path d="M9.6 4.6A2 2 0 1 1 11 8H2"></path><path d="M12.6 19.4A2 2 0 1 0 14 16H2"></path></svg>
+                  <span>Wind: <span id="wind_kph" class="weather-value">__ km/h</span></span>
+              </div>
+              <div class="detail-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg>
+                  <span>Wind: <span id="wind_mph" class="weather-value">__ mph</span></span>
+              </div>
+          </div>
+      </div>
+  </div>
+  <script>
+    const text = document.getElementById('text');
+    const city_name = document.getElementById('city');
+    const button =document.getElementById('button');
+const temp_return = document.getElementById('temp_return');
+const feels_like = document.getElementById("feels_like");
+const humidity = document.getElementById("humidity");
+const wind_kph =document.getElementById("wind_kph");
+const wind_mph =document.getElementById("wind_mph");
+const condition = document.getElementById("condition");
+    const icon = document.getElementById("icon");
+
+
+    async function getdata(cityname){
+        const promise = await fetch(`http://api.weatherapi.com/v1/current.json?key=2793f728cd3949599a7135150241805&q=${cityname}&aqi=yes`);
+        return await promise.json();
+    }
+    button.addEventListener('click', async ()=>{
+        const value = text.value;
+       const result = await getdata(value);
+       city_name.innerText = `${result.location.name}, ${result.location.country}`;
+       
+       temp_return.innerText = `${result.current.temp_c}`;
+       feels_like.innerText =`${result.current.feelslike_c}`;
+       humidity.innerText =`${result.current.humidity}`;
+       wind_kph.innerText =`${result.current.wind_kph}`;
+       wind_mph.innerText =`${result.current.wind_mph}`;
+       condition.innerText =`${result.current.condition.text}`;
+       icon.innerHTML = `<img src="https:${result.current.condition.icon}">`;
+              console.log(result);
+    })
+    //Enter event handler
+    text.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') {
+            button.click();
+        }
+    });
+
+  </script>
+</html>
+<style>* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Playfair Display', serif;
+}
+
+body {
+    min-height: 100vh;
+    background: #000000;
+    background-image: 
+        linear-gradient(45deg, rgba(20, 20, 20, 0.8) 0%, rgba(0, 0, 0, 0.9) 100%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.96 2.243 8.2 0H5.374zM48.97 0l3.657 3.657-1.414 1.414L46.143 0h2.828zM11.03 0L7.372 3.657 8.787 5.07 13.857 0H11.03zm32.284 0L49.8 6.485 48.384 7.9l-7.9-7.9h2.83zM16.686 0L10.2 6.485 11.616 7.9l7.9-7.9h-2.83zM22.344 0L13.858 8.485 15.272 9.9l7.9-7.9h-.828zm5.656 0L19.515 8.485 20.93 9.9l8.485-8.485h-1.414zM32.658 0l-8.485 8.485L25.587 9.9l8.485-8.485h-1.414zm5.657 0l-8.485 8.485L31.244 9.9l8.485-8.485h-1.414zm5.657 0l-8.485 8.485L36.9 9.9l8.485-8.485h-1.414zm5.657 0l-8.485 8.485L42.558 9.9l8.485-8.485h-1.414zM5.373 54.627L0 49.254l1.414-1.414L6.787 53.21l-1.414 1.414zm5.657 0L6.787 50.385l1.415-1.414 4.242 4.242-1.414 1.414zm5.657 0l-4.243-4.242 1.414-1.414 4.242 4.242-1.414 1.414zm5.657 0l-4.243-4.242 1.414-1.414 4.243 4.242-1.414 1.414zm5.657 0l-4.243-4.242 1.414-1.414 4.243 4.242-1.414 1.414zm5.657 0l-4.243-4.242 1.414-1.414 4.243 4.242-1.414 1.414zm5.657 0l-4.243-4.242 1.414-1.414 4.243 4.242-1.414 1.414zm5.657 0l-4.243-4.242 1.414-1.414 4.243 4.242-1.414 1.414zm5.657 0l-4.243-4.242 1.414-1.414 4.243 4.242-1.414 1.414z' fill='%23222222' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    color: #ffffff;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+}
+
+.app-title {
+    font-size: 2.5rem;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 2rem;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.app-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ffd700, transparent);
+}
+
+.search-box {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    color: #ffffff;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+.search-box button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(45deg, #ffd700, #ffb700);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-box button:hover {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.search-box button svg {
+    color: #000000;
+    width: 20px;
+    height: 20px;
+}
+
+.weather-card {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+
+.main-info {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 30px;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+#city {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    background: linear-gradient(to right, #ffffff, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.temp-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.temperature {
+    font-size: 6rem;
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(to right, #ffffff, #ffd700);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.condition {
+    font-size: 1.5rem;
+    color: #ffd700;
+    text-transform: capitalize;
+    letter-spacing: 1px;
+}
+
+.weather-details {
+    display: grid;
+    gap: 2rem;
+}
+
+.detail-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.detail-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 215, 0, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.detail-item svg {
+    width: 30px;
+    height: 30px;
+    color: #ffd700;
+}
+
+.detail-item span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.weather-value {
+    display: block;
+    font-size: 1.5rem;
+    color: #ffffff;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+/* Animations */
+@keyframes fadeInGold {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.main-info, .detail-item {
+    animation: fadeInGold 0.8s ease-out forwards;
+}
+
+.detail-item {
+    animation-delay: calc(var(--index) * 0.2s);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        padding: 2rem;
+    }
+    
+    .weather-card {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    #city {
+        font-size: 2.5rem;
+    }
+    
+    .temperature {
+        font-size: 5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 1.5rem;
+    }
+    
+    .app-title {
+        font-size: 2rem;
+    }
+    
+    #city {
+        font-size: 2rem;
+    }
+    
+    .temperature {
+        font-size: 4rem;
+    }
+    
+    .detail-item {
+        padding: 1.2rem;
+    }
+}
+
+/* Shimmer Effect */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.main-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 215, 0, 0.1),
+        transparent
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 3s infinite linear;
+    pointer-events: none;
+}
+  
+</style>
+<!-- 
+// By fetch method we first console all data in that there will be diifernt section then according to your requirement we will fetch like this "result.current.temp_c" -->
